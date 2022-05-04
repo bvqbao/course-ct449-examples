@@ -1,0 +1,18 @@
+GET /products
+Returns a list of all product items.
+
+GET /cart
+Returns a list of all cart items.
+
+POST /cart
+Accepts a JSON body with id, title, description, and price attributes and inserts that body as a
+new item object to the cart. If the cart item already exists, this call increments the quantity of the
+existing cart item by 1.
+
+POST /cart/delete
+Accepts a JSON body with the attribute id. The server iterates through the cart store and decrements
+the quantity of the cart item with the matching id by 1. If the quantity of that item is equal to 1
+when the call is made, the cart item object is removed.
+
+POST /cart/delete/all
+Removes all items in the cart.

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Yes or No</title>
+</head>
+<body>
+	<div id="app">
+		<h2>Yes or No</h2>
+		<p>
+			Ask a yes/no question:
+			<input type="text" v-model="question">
+		</p>
+		<p>{{ answer }}</p>
+		<img :src="answerImg" alt="">
+	</div>
+	
+	<script src="https://unpkg.com/vue@3"></script>
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					question: '',
+					answer: '',
+					answerImg: ''
+				};
+			},
+			watch: {
+				question(newQuestion, oldQuestion) {
+					this.answer = '';
+					this.answerImg = '';
+					if (this.question.indexOf('?') > -1) {
+						this.getAnswer();
+					}
+				}
+			},
+			methods: {
+				getAnswer() {
+					this.answer = 'Thinking...';
+					fetch('https://yesno.wtf/api')
+						.then(response => response.json())
+						.then(response => {
+							this.answer = response.answer;
+							this.answerImg = response.image;
+						});
+				}
+			}
+		});
+
+		app.mount('#app');
+	</script>
+</body>
+</html>

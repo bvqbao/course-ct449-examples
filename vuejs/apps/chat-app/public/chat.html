@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="/img/favicon.png">
+	<link rel="stylesheet" href="/css/styles.min.css">
+	<title>Chat App</title>
+</head>
+<body>
+	<div id="app" class="chat">
+		<sidebar :room="room" :users="users"></sidebar>
+
+		<div class="chat__main">
+			<div ref="divMessages" id="messages" class="chat__messages">
+				<chat-message
+					v-for="message in messages"
+					:key="message.id"
+					:is-url="message.isLocationMessage"
+					:username="message.username"
+					:content="message.content"
+					:created-at="message.createdAt" />
+			</div>
+
+			<div class="compose">
+				<form id="message-form" @submit.prevent="sendMessage">
+					<input name="message" placeholder="Message"
+						required autocomplete="off" spellcheck="false"
+						v-model="newMessage"
+					>
+					<button :disabled="sending">Send</button>
+				</form>
+				<button id="send-location"
+					@click="sendLocation"
+					:disabled="sending"
+				>Send location</button>
+			</div>
+		</div>	
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+	<script src="https://unpkg.com/vue@3"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/chat.js"></script>
+</body>
+</html>

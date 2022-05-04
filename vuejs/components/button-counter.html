@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+            integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <title>Button Counter</title>
+    </head>
+    <body>
+        <div id="app" style="margin-top: 10px" class="ui container">
+            <button-counter></button-counter>
+
+            <button-counter type="secondary"> Please click me! </button-counter>
+
+            <button-counter type="negative" @increase="handleIncrease">
+                Get value via event: {{ value }}
+            </button-counter>
+
+            <button-counter type="secondary" v-slot="slotProps">
+                Please click me (with v-slot)! {{ slotProps.count }}
+            </button-counter>
+
+            <button-counter type="positive" v-slot="{ count }">
+                <i class="fa-solid fa-user-plus"></i> {{ count }}
+            </button-counter>
+
+            <button-counter type="positive">
+                <template #prefix>
+                    <i class="fa-solid fa-less-than"></i>
+                </template>
+
+                <template v-slot="{ count }"> {{ count }} </template>
+
+                <template #postfix>
+                    <i class="fa-solid fa-greater-than"></i>
+                </template>
+            </button-counter>
+        </div>
+
+        <script type="text/x-template" id="button-counter-template">
+            <button class="ui button" :class="type" @click="increase">
+            	<slot name="prefix"><i class="fa-solid fa-hashtag"></i></slot>
+            	<slot :count="count">You clicked me {{ count }} times</slot>
+            	<slot name="postfix"><i class="fa-solid fa-hashtag"></i></slot>
+            </button>
+        </script>
+
+        <script src="https://unpkg.com/vue@3"></script>
+        <script>
+            const ButtonCounterComponent = {
+                props: {
+                    type: {
+                        type: String,
+                        default: "primary",
+                        validator(value) {
+                            return [
+                                "primary",
+                                "secondary",
+                                "positive",
+                                "negative",
+                            ].includes(value);
+                        },
+                    },
+                },
+                emits: {
+                    increase: (count) => {
+                        return typeof count !== "string" && !isNaN(count);
+                    },
+                },
+                data() {
+                    return {
+                        count: 0,
+                    };
+                },
+                template: "#button-counter-template",
+                methods: {
+                    increase() {
+                        this.count++;
+                        this.$emit("increase", this.count);
+                    },
+                },
+            };
+
+            const app = Vue.createApp({
+                components: {
+                    ButtonCounter: ButtonCounterComponent,
+                },
+                data() {
+                    return {
+                        value: 0,
+                    };
+                },
+                methods: {
+                    handleIncrease(val) {
+                        this.value = val;
+                    },
+                },
+            }).mount("#app");
+        </script>
+    </body>
+</html>

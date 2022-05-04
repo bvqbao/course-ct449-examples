@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style>
+            .active {
+                text-decoration: underline;
+            }
+        </style>
+        <title>Todo App</title>
+    </head>
+    <body>
+        <div id="app">
+            <h2>Todo List</h2>
+            Enter thing to do: <input type="text" v-model="todoItem" />
+            <button @click="addTodoItem">Add</button>
+            <ul>
+				<todo-item
+					v-for="(todo, index) in todoList"
+					:key="todo.id"
+					:class="{active: index === selected}"
+					:todo="todo"
+					@click="selectTodoItem(index)"
+					@dblclick="removeTodoItem(index)"
+				>
+				</todo-item>
+            </ul>
+
+            <p v-if="todoCount > 0">{{ todoCount }} thing(s) to do.</p>
+        </div>
+
+        <script src="https://unpkg.com/vue@3"></script>
+        <script>
+            let todoId = 0;
+            const app = Vue.createApp({
+                data() {
+                    return {
+                        selected: -1,
+                        todoItem: "",
+                        todoList: [],
+                    };
+                },
+
+                computed: {
+                    todoCount() {
+                        return this.todoList.length;
+                    },
+                },
+
+                methods: {
+                    addTodoItem() {
+                        this.todoList.push({
+                            id: todoId++,
+                            text: this.todoItem,
+                        });
+                    },
+                    selectTodoItem(index) {
+                        this.selected = index;
+                    },
+                    removeTodoItem(index) {
+                        this.todoList.splice(index, 1);
+                    },
+                },
+            });
+
+            app.component("todo-item", {
+                props: {
+                    todo: Object,
+                },
+                template:`
+  					<li>{{ todo.text }}</li>
+  				`,
+            });
+
+            app.mount("#app");
+        </script>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "rollup": "^2.56.3"
+  }
+}

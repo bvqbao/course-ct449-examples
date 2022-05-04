@@ -1,0 +1,27 @@
+{
+    "name": "shopping-cart",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "start": "concurrently \"npm run server\" \"npm run serve\"",
+        "server": "node server",
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.4",
+        "axios": "^0.24.0",
+        "bulma": "^0.9.3",
+        "pinia": "^2.0.9",
+        "vue": "^3.2.29"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-eslint": "^4.5.15",
+        "@vue/cli-service": "^4.5.15",
+        "@vue/compiler-sfc": "^3.2.20",
+        "concurrently": "^6.3.0",
+        "eslint": "^6.7.2",
+        "eslint-plugin-vue": "^7.20.0"
+    }
+}

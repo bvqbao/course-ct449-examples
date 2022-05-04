@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Danh sách mua sắm</title>
+</head>
+<body>
+
+	<div id="app">
+		<div class="header">
+			<h1>{{ header }}</h1>
+			<button v-if="editing" class="btn" @click="doEdit(false)">Tắt hiệu chỉnh</button>
+			<button v-else class="btn btn-primary" @click="doEdit(true)">Hiệu chỉnh</button>
+		</div>
+		<form class="add-item-form"
+			v-if="editing"
+			@submit.prevent="saveItem"
+		>
+			<input type="text"
+				placeholder="Thêm đồ cần mua"
+				v-model.trim="newItem"
+			/>
+			<label>
+				<input type="checkbox"
+					v-model="newItemHighPriority"
+				/> Quan trọng
+			</label>
+			<button class="btn btn-primary"
+				:disabled="newItem.length === 0"
+			>
+				Thêm vào
+			</button>
+		</form>
+		<ul>
+			<li v-for="item in reversedItems"
+				:key="item.id"
+				@click="togglePurchased(item)"
+				@dblclick="removeItem(item.id)"
+				:class="{
+					strikeout: item.purchased,
+					priority: item.highPriority
+				}"
+			>
+				{{ item.label }}
+			</li>
+		</ul>
+		<p v-if="!items.length">Danh sách mua sắm rỗng</p>
+	</div>
+	
+	<script src="https://unpkg.com/vue@3"></script>
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					header: "Danh sách mua sắm",
+					editing: false,
+					items: [
+						{
+							id: 1,
+							label: "10 kg gạo",
+							purchased: true,
+							highPriority: false,
+						},
+						{
+							id: 2,
+							label: "10 trứng vịt",
+							purchased: true,
+							highPriority: false,
+						},
+						{
+							id: 3,
+							label: "5 cái chén",
+							purchased: false,
+							highPriority: true,
+						}						
+					],
+					newItem: "",
+					newItemHighPriority: false
+				}
+			},
+			computed: {
+				reversedItems() {
+					return [...this.items].reverse();
+				}
+			},
+			methods: {
+				togglePurchased (item) {
+					if (!this.editing) return; 
+					item.purchased = !item.purchased;
+				},
+				removeItem(id) {
+					if (!this.editing) return;
+					this.items = this.items.filter(item => item.id !== id);
+				},
+				saveItem() {
+					this.items.push({
+						id: this.items.length + 1,
+						label: this.newItem,
+						purchased: false,
+						highPriority: this.newItemHighPriority
+					});
+					this.newItem = "";
+					this.newItemHighPriority = false;
+				},
+				doEdit(e) {
+					this.editing = e;
+					this.newItem = "";
+					this.newItemHighPriority = false;
+				}
+			}
+		}).mount("#app");
+	</script>
+</body>
+</html>
